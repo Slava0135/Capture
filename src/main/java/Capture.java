@@ -1,4 +1,5 @@
 import arc.Events;
+import arc.util.Align;
 import arc.util.Timer;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
@@ -22,6 +23,10 @@ public class Capture extends Plugin {
                 Unit closestEnemy = Units.closestEnemy(oldTeam, tile.worldx(), tile.worldy(), 10000000, u -> true);
                 Team newTeam = closestEnemy != null ? closestEnemy.team : Team.derelict;
                 Call.effectReliable(Fx.upgradeCore, tile.build.x, tile.build.y, block.size, newTeam.color);
+                Call.infoPopup(
+                        "Team [#" + newTeam.color.toString() + "]" + newTeam.name
+                        + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
+                        + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 0, 0);
                 Timer.schedule(() -> tile.setNet(block, newTeam, 0), 0.6f);
             }
         });
