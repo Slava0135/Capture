@@ -26,7 +26,7 @@ public class Capture extends Plugin {
                 Call.infoPopup(
                         "Team [#" + newTeam.color.toString() + "]" + newTeam.name
                         + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
-                        + "[] core at " + tile.x + ", " + tile.y, 10f, Align.center, 0, 0, 0, 0);
+                        + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 0, 0);
                 Timer.schedule(() -> tile.setNet(block, newTeam, 0), 0.6f);
             }
         });
