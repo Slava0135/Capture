@@ -1,6 +1,7 @@
 import arc.Events;
 import arc.util.Align;
 import arc.util.Timer;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
@@ -16,10 +17,10 @@ public class Capture extends Plugin {
     @Override
     public void init() {
         Events.on(EventType.BlockDestroyEvent.class, e -> {
-            if (e.tile.build instanceof CoreBlock.CoreBuild){
+            if (e.tile.build instanceof CoreBlock.CoreBuild && !Vars.state.gameOver){
                 Tile tile = e.tile;
                 Team oldTeam = e.tile.build.team;
-                Block block = e.tile.build.block;
+                Block block = e.tile.block();
                 Unit closestEnemy = Units.closestEnemy(oldTeam, tile.worldx(), tile.worldy(), 10000000, u -> true);
                 Team newTeam = closestEnemy != null ? closestEnemy.team : Team.derelict;
                 Call.effectReliable(Fx.upgradeCore, tile.build.x, tile.build.y, block.size, newTeam.color);
@@ -27,7 +28,9 @@ public class Capture extends Plugin {
                         "Team [#" + newTeam.color.toString() + "]" + newTeam.name
                         + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
                         + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 0, 0);
-                Timer.schedule(() -> tile.setNet(block, newTeam, 0), 0.6f);
+                Timer.schedule(() -> tile.setNet(block, newTeam, 0), 0.1f);
+                tile.build.health = Float.POSITIVE_INFINITY;
+                Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
             }
         });
     }
