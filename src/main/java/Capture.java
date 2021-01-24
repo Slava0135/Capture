@@ -31,7 +31,7 @@ public class Capture extends Plugin {
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
-                }, 0.1f);
+                }, 0.5f);
                 Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
             }
         });
