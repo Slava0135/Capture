@@ -14,6 +14,10 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.storage.*;
 
 public class Capture extends Plugin {
+
+    int messageQueue = 0;
+    int messageLimit = 4;
+
     @Override
     public void init() {
         Events.on(EventType.BlockDestroyEvent.class, e -> {
@@ -27,7 +31,8 @@ public class Capture extends Plugin {
                 Call.infoPopup(
                         "Team [#" + newTeam.color.toString() + "]" + newTeam.name
                         + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
-                        + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 0, 0);
+                        + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 50 * messageQueue - 50 * messageLimit, 0);
+                messageQueue = (messageQueue + 1) % messageLimit;
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
