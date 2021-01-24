@@ -28,8 +28,10 @@ public class Capture extends Plugin {
                         "Team [#" + newTeam.color.toString() + "]" + newTeam.name
                         + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
                         + "[] core at " + tile.x + ", " + tile.y, 5f, Align.center, 0, 0, 0, 0);
-                Timer.schedule(() -> tile.setNet(block, newTeam, 0), 0.1f);
-                tile.build.health = Float.POSITIVE_INFINITY;
+                Timer.schedule(() -> {
+                    tile.setNet(block, newTeam, 0);
+                    tile.build.health = Float.POSITIVE_INFINITY;
+                }, 0.1f);
                 Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
             }
         });
