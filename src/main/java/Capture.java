@@ -63,11 +63,10 @@ public class Capture extends Plugin {
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
-                    Groups.fire.each(fire -> fire.dst(tile.build) < 4 * tilesize * block.size, Fire::remove);
                 }, 0.5f);
                 Timer.schedule(() -> {
-                    tile.build.health = tile.block().health;
                     Groups.fire.each(fire -> fire.dst(tile.build) < 4 * tilesize *  block.size, Fire::remove);
+                    tile.build.health = tile.block().health;
                 }, 5f);
             }
         });
