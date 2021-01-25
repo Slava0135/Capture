@@ -1,6 +1,8 @@
 import arc.Events;
+import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
 import arc.util.Align;
+import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.Fx;
@@ -16,6 +18,9 @@ import mindustry.world.Block;
 import mindustry.world.Edges;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.*;
+
+import static mindustry.Vars.tilesize;
+import static mindustry.Vars.world;
 
 public class Capture extends Plugin {
 
@@ -56,6 +61,12 @@ public class Capture extends Plugin {
                     tile.build.health = Float.POSITIVE_INFINITY;
                 }, 0.5f);
                 Timer.schedule(() -> {
+                    Geometry.circle((int) tile.build.x / tilesize, (int) tile.build.y / tilesize, 4 * block.size, (x, y) -> {
+                        Fires.extinguish(world.tile(x, y), 100f);
+                        for(Point2 p : Geometry.d4){
+                            Fires.extinguish(world.tile(x + p.x, y + p.y), 100f);
+                        }
+                    });
                     tile.build.health = tile.block().health;
                 }, 5f);
             }
