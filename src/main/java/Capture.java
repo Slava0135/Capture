@@ -14,6 +14,8 @@ import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.game.Teams;
 import mindustry.gen.Call;
+import mindustry.gen.Fire;
+import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.mod.Plugin;
 import mindustry.world.Block;
@@ -61,9 +63,12 @@ public class Capture extends Plugin {
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
+                    Groups.fire.each(fire -> fire.dst(tile.build) < 4 * block.size, Fire::remove);
                 }, 0.5f);
-                Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
-
+                Timer.schedule(() -> {
+                    tile.build.health = tile.block().health;
+                    Groups.fire.each(fire -> fire.dst(tile.build) < 4 * block.size, Fire::remove);
+                }, 5f);
             }
         });
     }
