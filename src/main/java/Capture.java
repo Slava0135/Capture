@@ -5,9 +5,11 @@ import arc.util.Align;
 import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
+import mindustry.content.Bullets;
 import mindustry.content.Fx;
 import mindustry.entities.Fires;
 import mindustry.entities.Units;
+import mindustry.entities.bullet.BulletType;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.game.Teams;
@@ -60,15 +62,8 @@ public class Capture extends Plugin {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
                 }, 0.5f);
-                Timer.schedule(() -> {
-                    Geometry.circle((int) tile.build.x / tilesize, (int) tile.build.y / tilesize, 4 * block.size, (x, y) -> {
-                        Fires.extinguish(world.tile(x, y), 100f);
-                        for(Point2 p : Geometry.d4){
-                            Fires.extinguish(world.tile(x + p.x, y + p.y), 100f);
-                        }
-                    });
-                    tile.build.health = tile.block().health;
-                }, 5f);
+                Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
+
             }
         });
     }
