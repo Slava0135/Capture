@@ -46,8 +46,7 @@ public class Capture extends Plugin {
                         if (team.team == Team.derelict) continue;
                         Unit enemy = Units.closest(team.team, tile.worldx(), tile.worldy(), u -> true);
                         if (enemy != null) {
-                            if (closestEnemy == null) closestEnemy = enemy;
-                            if (tile.dst(enemy) < tile.dst(closestEnemy)) {
+                            if (closestEnemy == null || tile.dst(enemy) < tile.dst(closestEnemy)) {
                                 closestEnemy = enemy;
                             }
                         }
