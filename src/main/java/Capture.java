@@ -1,8 +1,10 @@
 import arc.Events;
+import arc.math.geom.Point2;
 import arc.util.Align;
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.content.Fx;
+import mindustry.entities.Fires;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -10,6 +12,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Unit;
 import mindustry.mod.Plugin;
 import mindustry.world.Block;
+import mindustry.world.Edges;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.*;
 
@@ -36,6 +39,12 @@ public class Capture extends Plugin {
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
+                    Fires.remove(tile);
+                    for (int size = 0; size <= block.size; size++) {
+                        for (Point2 edge : Edges.getEdges(size)) {
+                            Fires.remove(Vars.world.tile(tile.x + edge.x, tile.y + edge.y));
+                        }
+                    }
                 }, 0.5f);
                 Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
             }
