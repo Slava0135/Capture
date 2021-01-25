@@ -42,15 +42,12 @@ public class Capture extends Plugin {
                 Timer.schedule(() -> {
                     tile.setNet(block, newTeam, 0);
                     tile.build.health = Float.POSITIVE_INFINITY;
-                    Fires.remove(tile);
-                    for (int size = 1; size <= block.size; size++) {
-                        for (Point2 edge : Edges.getEdges(size)) {
-                            Fires.remove(Vars.world.tile(tile.x + edge.x, tile.y + edge.y));
-                        }
-                    }
                 }, 0.5f);
-                Timer.schedule(() -> tile.build.health = tile.block().health, 5f);
-
+                Timer.schedule(() -> {
+                    Fires.remove(tile);
+                    tile.getLinkedTilesAs(block, Fires::remove);
+                    tile.build.health = tile.block().health;
+                }, 5f);
             }
         });
     }
