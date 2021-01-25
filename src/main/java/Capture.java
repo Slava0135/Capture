@@ -8,6 +8,7 @@ import mindustry.entities.Fires;
 import mindustry.entities.Units;
 import mindustry.game.EventType;
 import mindustry.game.Team;
+import mindustry.game.Teams;
 import mindustry.gen.Call;
 import mindustry.gen.Unit;
 import mindustry.mod.Plugin;
@@ -31,8 +32,19 @@ public class Capture extends Plugin {
                 Block block = e.tile.block();
 
                 Unit closestEnemy = Units.closestEnemy(oldTeam, tile.worldx(), tile.worldy(), 10000000, u -> true);
+                if (oldTeam == Team.derelict) {
+                    for (Teams.TeamData team : Vars.state.teams.active) {
+                        if (team.team == Team.derelict) continue;
+                        Unit enemy = Units.closest(team.team, tile.worldx(), tile.worldy(), u -> true);
+                        if (tile.dst(enemy) < tile.dst(closestEnemy)) {
+                            closestEnemy = enemy;
+                        }
+                    }
+                }
+
                 Team newTeam = closestEnemy != null ? closestEnemy.team : Team.derelict;
-                Call.effectReliable(Fx.upgradeCore, tile.build.x, tile.build.y, block.size, newTeam.color);
+
+                Call.effectReliable(Fx.upgradeCore, tile.worldx(), tile.worldy(), block.size, newTeam.color);
                 Call.infoPopup(
                         "Team [#" + newTeam.color.toString() + "]" + newTeam.name
                         + " []captured team [#" + oldTeam.color.toString() + "]"+ oldTeam.name
@@ -44,8 +56,6 @@ public class Capture extends Plugin {
                     tile.build.health = Float.POSITIVE_INFINITY;
                 }, 0.5f);
                 Timer.schedule(() -> {
-                    Fires.remove(tile);
-                    tile.getLinkedTilesAs(block, Fires::remove);
                     tile.build.health = tile.block().health;
                 }, 5f);
             }
